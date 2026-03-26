@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ColorOS 通知下沉</string>
+    <string name="xposed_description">Hook for ColorOS notification sinking</string>
+</resources>
