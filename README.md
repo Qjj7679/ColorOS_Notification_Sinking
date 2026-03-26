@@ -1,5 +1,7 @@
 # ColorOS Notification Sinking
 
+![License](https://img.shields.io/github/license/Qjj7679/ColorOS_Notification_Sinking?style=flat-square)
+
 为 ColorOS 16 的锁屏/AOD 通知提供“底部边距”可调的 Xposed/YukiHookAPI 模块。提供可视化 UI 配置，参数通过 ContentProvider 供 SystemUI 读取。
 
 ## 功能
@@ -36,3 +38,6 @@ app/build/outputs/apk/debug/app-debug.apk
 
 ## 备注
 - Hook 侧已增加进程内缓存，首次读取后缓存值；重启 SystemUI 会重新读取。
+
+## License
+MIT
