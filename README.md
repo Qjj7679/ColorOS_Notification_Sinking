@@ -2,7 +2,7 @@
 
 ![License](https://img.shields.io/github/license/Qjj7679/ColorOS_Notification_Sinking?style=flat-square)
 
-为 ColorOS 16 的锁屏/AOD 通知提供“底部边距”可调的 Xposed/YukiHookAPI 模块。提供可视化 UI 配置，参数通过 ContentProvider 供 SystemUI 读取。
+为 ColorOS 16 的锁屏/AOD 通知提供“底部边距”可调的 Xposed 模块。提供可视化 UI 配置，参数通过 ContentProvider 供 SystemUI 读取。
 
 ## 功能
 - 调节锁屏界面通知底部边距（dp）
