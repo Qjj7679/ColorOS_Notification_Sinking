@@ -9,5 +9,5 @@ object SinkingConfig {
 
     const val DEFAULT_DP = 300f
     const val MIN_DP = 24f
-    const val MAX_DP = 360f
+    const val MAX_DP = 480f
 }
