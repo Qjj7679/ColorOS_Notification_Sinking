@@ -39,5 +39,9 @@ app/build/outputs/apk/debug/app-debug.apk
 ## 备注
 - Hook 侧已增加进程内缓存，首次读取后缓存值；重启 SystemUI 会重新读取。
 
+## v1.2 更新
+- 修复重启设备后配置偶发不生效的问题，避免回退到默认值或系统原始位置。
+- 增强开机阶段配置读取稳定性：增加短重试与上次成功值兜底缓存（DPS）。
+
 ## License
 MIT

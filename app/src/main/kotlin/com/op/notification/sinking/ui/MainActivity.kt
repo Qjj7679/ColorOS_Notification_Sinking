@@ -30,6 +30,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 
 class MainActivity : ComponentActivity() {
 
@@ -75,6 +76,7 @@ private fun ConfigScreen(initialDp: Float, onSave: (Float) -> Unit) {
 
     LaunchedEffect(Unit) {
         snapshotFlow { currentValue }
+            .drop(1)
             .debounce(300)
             .distinctUntilChanged()
             .collect { value ->
@@ -85,7 +87,7 @@ private fun ConfigScreen(initialDp: Float, onSave: (Float) -> Unit) {
     Scaffold(
         topBar = {
             SmallTopAppBar(
-                title = "ColorOS 16 通知下沉"
+                title = "ColorOS 通知下沉"
             )
         }
     ) { paddingValues: PaddingValues ->

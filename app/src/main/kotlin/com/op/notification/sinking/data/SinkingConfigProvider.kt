@@ -2,10 +2,12 @@ package com.op.notification.sinking.data
 
 import android.content.ContentProvider
 import android.content.ContentValues
+import android.content.Intent
 import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
+import android.os.UserManager
 
 class SinkingConfigProvider : ContentProvider() {
 
@@ -19,15 +21,40 @@ class SinkingConfigProvider : ContentProvider() {
     }
 
     private fun readDp(): Float {
-        val prefs = context?.getSharedPreferences(PREFS_NAME, 0) ?: return SinkingConfig.DEFAULT_DP
+        val deviceContext = context?.createDeviceProtectedStorageContext() ?: context ?: return SinkingConfig.DEFAULT_DP
+        migrateOldDataIfNeeded()
+        val prefs = deviceContext.getSharedPreferences(PREFS_NAME, 0) ?: return SinkingConfig.DEFAULT_DP
         return prefs.getFloat(KEY_DP, SinkingConfig.DEFAULT_DP)
             .coerceIn(SinkingConfig.MIN_DP, SinkingConfig.MAX_DP)
     }
 
     private fun writeDp(value: Float) {
         val safe = value.coerceIn(SinkingConfig.MIN_DP, SinkingConfig.MAX_DP)
-        val prefs = context?.getSharedPreferences(PREFS_NAME, 0) ?: return
-        prefs.edit().putFloat(KEY_DP, safe).apply()
+        val deviceContext = context?.createDeviceProtectedStorageContext() ?: context ?: return
+        val prefs = deviceContext.getSharedPreferences(PREFS_NAME, 0) ?: return
+        prefs.edit().putFloat(KEY_DP, safe).commit()
+        // Send broadcast after saving
+        context?.sendBroadcast(Intent(SinkingConfig.ACTION_CONFIG_CHANGED))
+    }
+
+    private fun migrateOldDataIfNeeded() {
+        val ctx = context ?: return
+        val deviceContext = ctx.createDeviceProtectedStorageContext()
+        val devicePrefs = deviceContext.getSharedPreferences(PREFS_NAME, 0)
+
+        // 如果新存储中已经有值，不需要迁移
+        if (devicePrefs.contains(KEY_DP)) return
+
+        // 如果用户尚未解锁，无法访问旧存储 (CE)，跳过迁移，等下次解锁后调用再尝试
+        val userManager = ctx.getSystemService(UserManager::class.java)
+        if (userManager != null && !userManager.isUserUnlocked) return
+
+        // 尝试从旧存储（CE）读取
+        val oldPrefs = ctx.getSharedPreferences(PREFS_NAME, 0)
+        if (oldPrefs.contains(KEY_DP)) {
+            val oldVal = oldPrefs.getFloat(KEY_DP, SinkingConfig.DEFAULT_DP)
+            devicePrefs.edit().putFloat(KEY_DP, oldVal).commit()
+        }
     }
 
     override fun onCreate(): Boolean = true

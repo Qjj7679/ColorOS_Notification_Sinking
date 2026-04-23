@@ -42,8 +42,8 @@ android {
         applicationId = 'com.op.notification.sinking'
         minSdk = 33
         targetSdk = 36
-        versionCode = 11
-        versionName = '1.1'
+        versionCode = 12
+        versionName = '1.2'
 
     }
 
@@ -82,7 +82,13 @@ dependencies {
     debugImplementation libs.androidx.compose.ui.tooling
     debugImplementation libs.androidx.compose.ui.test.manifest
 
-    implementation libs.yukihookapi.api
+    implementation(libs.yukihookapi.api) {
+        exclude group: "androidx.appcompat", module: "appcompat"
+        exclude group: "com.google.android.material", module: "material"
+        exclude group: "androidx.preference", module: "preference"
+        exclude group: "androidx.fragment", module: "fragment"
+        exclude group: "androidx.activity", module: "activity"
+    }
 
     compileOnly libs.xposed.api
     ksp libs.yukihookapi.ksp.xposed
